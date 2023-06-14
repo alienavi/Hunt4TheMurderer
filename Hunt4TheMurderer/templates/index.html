@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="flex-col text-white">
+    <h1 class="text-5xl font-bold py-5 text-center"> Hunt for the <span class="text-rose-700">Murderer</span>!</h1>
+    <p class="text-justify sm:px-40 px-10 py-2">
+        Cluedo, the notorious board game that whisks you away to Tudor Hall's Mansion, where murder and mischief reign supreme! Picture this: a bunch of wannabe detectives strutting around in fancy character costumes, desperately trying to clear their names.
+        <br>
+        So, here's the scoop: old Sir Hugh Black meets an untimely demise, and to make matters worse, his dear nephew, Dr. Black, also bites the dust on his 30th birthday. Talk about a family curse!
+        <br>
+        Now it's up to you and your fellow suspects to crack this case and prove your innocence. But hey, don't forget the essentials: the killer, the weapon of choice, and the ever-important room where the deadly deeds went down.
+    </p>
+    <p class="text-justify sm:px-40 px-10 py-2">
+        Cluedo is not just a game—it's a hilarious murder-mystery extravaganza that will have you laughing, scheming, and accusing everyone around you.
+        <br>
+        Who knew solving a crime could be this much fun? Get ready to channel your inner Sherlock Holmes (or Inspector Clouseau) and let the games begin!
+    </p>
+</div>
+<div class="flex-col text-white">
+    <form action="/start_game" method="post">
+        <button class="justify-center text-center rounded-lg bg-orange-500 px-10 py-2 shadow-white shadow-md bold hover:bg-lime-600 active:border-lime-900">
+            I'm ready!
+        </button>
+    </form>
+</div>
+
+{% endblock %}

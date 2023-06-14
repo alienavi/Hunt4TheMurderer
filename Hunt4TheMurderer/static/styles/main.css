@@ -1,0 +1,42 @@
+.body-main{
+    background-image: url('../images/Game_Background.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: lighten;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#header, #footer{
+    background-color: rgba(64, 51, 34, 0.8);
+    color: white;
+}
+.img-404{
+    position: absolute;
+    top: 0;
+    left: 0;    
+    width: 100%;
+    z-index: -1;
+    height: -webkit-fill-available;
+    background-image: url('../images/404.png');
+    background-repeat: no-repeat;
+    background-position:center;    
+    background-color: rgba(0, 0, 0, 0.8);
+    background-blend-mode: lighten;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+@media only screen and (max-width: 850px) {
+    .img-404{
+        background-image: url('../images/404_small.png');
+    }
+}
+@media only screen and (max-width: 400px) {
+    .img-404{
+        background-image: url('../images/404_400.png');
+    }
+}

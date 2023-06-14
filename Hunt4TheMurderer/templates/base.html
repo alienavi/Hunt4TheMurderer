@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Hunt for The Murderer!</title>
+        <meta name="description" content="Tokyo has been killed on her estate. With her misdeeds she has no small list of enemies. 
+        The traces are all around the web. The detective is looking for a partner to solve the case, can you take us this daunting task?">
+        
+        <!-- main.css -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/main.css')}}">
+        <!-- script files -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- SocketIO and jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js" integrity="sha512-AI5A3zIoeRSEEX9z3Vyir8NqSMC1pY7r5h2cE+9J6FLsoEmSSGLFaqMQw8SWvoONXogkfFrkQiJfLeHLz3+HOg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- flowbite.js -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
+        <!-- main.js -->
+        <script src="{{ url_for('static', filename='scripts/main.js')}}"></script>
+        <script type=text/javascript>
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+    </head>
+    <body class="min-h-screen dark:text-white flex flex-col body-main">
+        <!-- header -->
+        <header class="text-white sticky top-0 z-10" id="header">
+            <section class="max-w-6xl mx-auto p-4 flex justify-between items-center">
+                <h1 class="text-3xl font-medium">
+                    <a href="/" class="">Mystery Games</a>
+                </h1>          
+            </section>
+        </header>
+        <main class="max-w-7xl mx-auto">
+            <section id="hero" class="flex flex-col justify-center sm:flex-col p-4 items-center gap-8 mb-12">
+                <!-- main content -->
+                {% block content %}
+                {% endblock %}
+            </section>
+        </main>
+        <!-- footer -->
+        <footer id="footer" class="text-white text-md w-full mt-auto" id="footer">
+            <section class="max-w-6xl mx-auto flex flex-col p-4 sm:flex-row sm:justify-between">
+                <div class="w-full sm:gap-1">
+                    <p class="text-center">Copyright &copy; <span id="year">2023</span>. All Rights Reserved.</p>
+                </div>
+            </section>
+        </footer>
+        <!-- additional scripts -->
+        <script>
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+        {%- block javascript -%}{%- endblock -%}
+    </body>
+</html>

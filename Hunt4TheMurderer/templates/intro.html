@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<div class="flex-col">
+    <div class="mx-10 mb-4 bg-gray-300 dark:bg-slate-600 rounded-lg">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-white" id="introTab" data-tabs-toggle="introContent">
+            <li class="" role="presentation">
+                <a class="inline-flex p-4 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group" id="suspects-tab" data-tabs-target="#suspects" type="button" role="tab" aria-controls="suspects" aria-selected="false">
+                    <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                    </svg>
+                    Suspects
+                </a>
+            </li>
+            <li class="" role="presentation">
+                <a class="inline-flex p-4 text-blue-600 rounded-t-lg active dark:text-blue-500 border-blue-500 group" id="weapons-tab" data-tabs-target="#weapons" type="button" role="tab" aria-controls="weapons" aria-selected="false">
+                    <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    Weapons
+                </a>
+            </li>
+            <li class="" role="presentation">
+                <a class="inline-flex p-4 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group" id="rooms-tab" data-tabs-target="#rooms" type="button" role="tab" aria-controls="rooms" aria-selected="false">
+                    <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path>
+                    </svg>
+                    Rooms
+                </a>
+            </li>
+            <li class="" role="presentation">
+                <a class="inline-flex p-4 border-transparent rounded-t-lg hover:border-gray-300 hover:text-gray-300 group" id="rules-tab" data-tabs-target="#rules" type="button" role="tab" aria-controls="rules" aria-selected="false">
+                    <svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
+                    </svg>
+                    Rules
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="flex-col text-white">
+    <div id="introContent" class="mx-auto px-10 max-w-screen-xl text-left">
+        <div id="suspects" class="hidden p-4 rounded-lg border-slate-500 dark:border-slate-300" role="tabpanel" aria-label="">
+            <ul class="max-w-2xl space-y-1 list-disc list-inside">
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Kassandra Scarlet:</span> The gossip magnet who could seduce scandal out of a stone.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Victor Plum:</span> The coding wizard who turns bits and bytes into virtual adventures.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Jack Mustard:</span> The sportswriter who tackles stories with the same intensity he used to tackle opponents on the field.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Jacob Green:</span> The power player you go to when you need a favor, but beware the price tag attached.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Eleanor Peacock:</span> The heiress who pursues perfection with a plumage of poise and privilege.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">Doctor White:</span> a biologist with a PhD in plant toxicology.
+                </li>
+            </ul>
+        </div>
+        <div id="weapons" class="hidden p-4 rounded-lg" role="tabpanel" aria-label="">
+            <ul class="max-w-2xl space-y-1 list-disc list-inside">
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The rope:</span> When you want to tie up loose ends or create an impromptu escape plan for stubborn jars.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The lead pipe:</span> Because nothing says "I mean business" like a classic weapon from the board game Clue.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The dagger:</span> A compact tool for impressively overreacting to tiny inconveniences.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The wrench:</span> Perfect for fixing both plumbing issues and your life choices
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The candlestick:</span> The ultimate weapon for illuminating dark mysteries and awkward family dinners.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The pistol:</span> An ideal accessory for settling arguments in the classiest and most dramatic way possible.
+                </li>
+            </ul>
+        </div>
+        <div id="rooms" class="hidden p-4 rounded-lg" role="tabpanel" aria-label="">
+            <ul class="max-w-2xl space-y-1 list-disc list-inside">
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The kitchen:</span> Where culinary magic happens, turning raw ingredients into delicious creations and smoke alarms into unexpected concert performers.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The living room:</span> The gathering space for Netflix marathons, cozy evenings, and occasional battles over the TV remote.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The dining room:</span> Where meals become feasts, conversations flow, and awkward silences are broken by the sound of clinking cutlery.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The courtyard:</span> A serene oasis of nature, where the birds sing, the flowers bloom, and the occasional squirrel gatecrashes your picnic.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The games room:</span> A haven of entertainment, where friendly competition, laughter, and questionable dance moves take center stage.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The garage:</span> The kingdom of tools, where cars are sheltered, forgotten treasures are stored, and questionable DIY projects come to life.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The study:</span> The realm of knowledge and productivity, where dreams are written, mysteries are unraveled, and empty coffee mugs mysteriously multiply.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The bathroom:</span> The sanctuary of tranquility, where long showers turn into impromptu concerts and the search for a lost hair tie becomes an epic quest.
+                </li>
+                <li class="items-center">
+                    <span class="font-semibold relative -left-2 -mr-2">The bedroom:</span> The realm of dreams and slumber, where cozy blankets, fluffy pillows, and the battle against rogue monsters under the bed take place.
+                </li>
+            </ul>
+        </div>
+        <div id="rules" class="hidden p-4 rounded-lg" role="tabpanel" aria-label="">
+            <ul class="max-w-2xl space-y-1 list-none list-inside">
+                <li class="items-center">
+                    Congratulations, you're finally granted access to the prestigious mansion, where murder mysteries and mind-bending puzzles await!
+                </li>
+                <li class="items-center">
+                    Prepare yourself to become a master sleuth as you navigate through the labyrinth of rooms, each holding tantalizing clues and secrets.
+                </li>
+                <li class="items-center">
+                    Remember, the suspects are eagerly waiting to be discovered, their identities cleverly concealed amidst the web of deception.
+                </li>
+                <li class="items-center">
+                    Be sure to sharpen your wits and solve the puzzles, because there's nothing more thrilling than unlocking a room and unveiling a clue, one key at a time.
+                </li>
+                <li class="items-center">
+                    But wait, there's more! Not only will you collect five dashing suspects and an arsenal of five deadly weapons, but you'll also get to explore a whopping eight rooms. Talk about a real estate extravaganza!
+                </li>
+                <li class="items-center">
+                    Brace yourself for the ultimate challenge as you approach the grand finale, where the elusive murderer, the weapon of choice, and the scene of the crime patiently await your deduction skills.
+                </li>
+                <li class="items-center">
+                    Get ready to embark on an exhilarating hunt, armed with sarcasm, quick thinking, and a determination to crack the case wide open. Happy investigation, dear detective!
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="flex-col text-white">
+    <form action="/game" method="post">
+        <button class="justify-center text-center rounded-lg bg-orange-500 px-10 py-2 shadow-white shadow-md bold hover:bg-lime-600 active:border-lime-900">
+            Gotcha!
+        </button>
+    </form>
+</div>
+
+{% endblock %}
