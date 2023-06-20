@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, jsonify, request
+from flask import Blueprint, render_template, jsonify, request, redirect, url_for
+from flask_login import login_required, current_user
+from . import login_manager
 import json
 from random import shuffle
 
@@ -29,16 +31,23 @@ def start_game():
 def mansion():    
     return render_template('game/main.html', imgList=map(json.dumps, imgList))
 
-@main.route('/kitchen', methods=['GET', 'POST'])
-def kitchen():
-    print(request.form)
-    if 'countries' in request.form:
-        name = request.form.get('countries')
-        print(name)
-        if(name == 'INDIA'):
-            result = 1
-        else:
-            result = 0
-        return jsonify(message=result)
+@main.route('/admin')
+@login_required
+def admin():
+    if current_user.is_authenticated:
+        if current_user.username.lower() == 'admin' :
+            return 'Howdy Admin'
+        else :
+            return 'Forbidden'
+    
+@main.route('/player')
+@login_required
+def player():
+    if current_user.is_authenticated:
+        return 'Player - ' + current_user.username
     else:
-        return '',400
+        return 'Login Required'
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect(url_for('auth.login'))

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title%} {{ title }} {% endblock %}
+{% block content%}
+<div class="w-full max-w-xs">
+    <form action="{{ request.path }}" method="POST" class="bg-transparent bg-stone-500 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {{ form.csrf_token }}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        
+                  
+        <div class="mb-4">
+            <label class="block text-sm font-bold mb-2" for="username">
+                Username
+            </label>
+            {{ form.username(class_="form-control text-black",placeholder="Username")}}
+        </div>
+        {% for error in form.username.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor%}
+        
+        <div class="mb-4">
+            <label class="block text-sm font-bold mb-2" for="password">
+                Password
+            </label>
+            {{ form.password(class_="form-control text-black",placeholder="Password")}}
+        </div>
+        {% for error in form.password.errors %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> 
+        {% endfor%}
+        {% if request.path == '/register' %}
+            <div class="form-group mb-3">
+                <label class="block text-sm font-bold mb-2" for="confirm_pwd">
+                    Confirm Password
+                </label>
+                {{ form.confirm_pwd(class_="form-control text-black",placeholder="Confirm Password")}}
+            </div>
+            {% for error in form.confirm_pwd.errors %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ error }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div> 
+            {% endfor%}
+        {% endif %}
+        {% if request.path == '/register' %}
+            <div class="form-group mb-3">
+                <label class="block text-sm font-bold mb-2" for="admin">
+                    Admin?
+                </label>
+                {{ form.admin(class_="form-control text-black",placeholder="Confirm Password")}}
+            </div>
+            {% for error in form.admin.errors %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ error }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div> 
+            {% endfor%}
+        {% endif %}
+        <div class="text-center">
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-block btn-primary mb-3"> {{ btn_action }} </button>
+            </div>
+
+            <p>
+                {% if request.path != '/register' %}
+                New here?
+                <a href="{{url_for('auth.register')}}">Create account</a>
+                {% else %}
+                Already have an account?
+                <a href="{{url_for('auth.login')}}">Login</a>
+                {% endif %}
+            </p>
+            
+        </div>
+    </form>
+</div>
+{% endblock %}

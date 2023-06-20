@@ -5,3 +5,4 @@ class Config:
     SECRET_KEY = uuid4().hex
     SESSION_PERMANENT = True
     SESSION_TYPE = 'filesystem'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
