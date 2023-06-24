@@ -13,18 +13,26 @@ auth = Blueprint('auth',__name__)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+def load_all_users():
+    return User.query.all()
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        if current_user.admin == True :
+            redirect(url_for('auth.admin'))
+        else :
+            return redirect(url_for('auth.player'))
     form = login_form()
     if form.validate_on_submit():
-        print('here')
         try:
-            print(form.username.data, form.password.data)
             user = User.query.filter_by(username=form.username.data).first()
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('main.player'))
+                if user.admin == True :                    
+                    return redirect(url_for('auth.admin'))
+                else :
+                    return redirect(url_for('auth.player'))
         except Exception as e:
             flash(e, 'Danger')
     return render_template(
@@ -35,47 +43,45 @@ def login():
         btn_action='Login'
     )
 
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
-
 @auth.route('/register', methods=['POST','GET'])
+@login_required
 def register():
-    form = register_form()
-    if form.validate_on_submit():
-        try:
-            username = form.username.data
-            password = form.password.data
-            admin = form.admin.data
-            newuser = User(
-                username = username,
-                password = generate_password_hash(password),
-                admin = admin
-            )
+    if current_user.admin == True :
+        form = register_form()
+        if form.validate_on_submit():
+            try:
+                username = form.username.data
+                password = form.password.data
+                admin = form.admin.data
+                newuser = User(
+                    username = username,
+                    password = generate_password_hash(password),
+                    admin = admin
+                )
 
-            db.session.add(newuser)
-            db.session.commit()
-            flash(f'Account Successfully Created','success')
-            return redirect(url_for('auth.login'))
-        except InvalidRequestError:
-            db.session.rollback()
-            flash(f"Something went wrong!", "danger")
-        except IntegrityError:
-            db.session.rollback()
-            flash(f"User already exists!.", "warning")
-        except DataError:
-            db.session.rollback()
-            flash(f"Invalid Entry", "warning")
-        except InterfaceError:
-            db.session.rollback()
-            flash(f"Error connecting to the database", "danger")
-        except DatabaseError:
-            db.session.rollback()
-            flash(f"Error connecting to the database", "danger")
-        except BuildError:
-            db.session.rollback()
-            flash(f"An error occured !", "danger")
-    
+                db.session.add(newuser)
+                db.session.commit()
+                flash(f'Account Successfully Created','success')
+                return redirect(url_for('auth.login'))
+            except InvalidRequestError:
+                db.session.rollback()
+                flash(f"Something went wrong!", "danger")
+            except IntegrityError:
+                db.session.rollback()
+                flash(f"User already exists!.", "warning")
+            except DataError:
+                db.session.rollback()
+                flash(f"Invalid Entry", "warning")
+            except InterfaceError:
+                db.session.rollback()
+                flash(f"Error connecting to the database", "danger")
+            except DatabaseError:
+                db.session.rollback()
+                flash(f"Error connecting to the database", "danger")
+            except BuildError:
+                db.session.rollback()
+                flash(f"An error occured !", "danger")
+        
     return render_template(
         'auth.html',
         form=form,
@@ -87,4 +93,26 @@ def register():
 @auth.route('/logout')
 def logout():
     logout_user()
+    return redirect(url_for('auth.login'))
+
+@auth.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():    
+    if current_user.is_authenticated:
+        if current_user.admin == True :
+            users = load_all_users()            
+            return render_template('admin.html', userlist=users)
+        else :
+            return 'Forbidden'
+    
+@auth.route('/player')
+@login_required
+def player():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.start_game'))
+    else:
+        return 'Login Required'
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
     return redirect(url_for('auth.login'))

@@ -4,8 +4,10 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>Hunt for The Murderer!</title>
+        <title>
+            Hunt for The Murderer!
+            {% block title %}{% endblock %}
+        </title>
         <meta name="description" content="Tokyo has been killed on her estate. With her misdeeds she has no small list of enemies. 
         The traces are all around the web. The detective is looking for a partner to solve the case, can you take us this daunting task?">
         
@@ -27,14 +29,21 @@
     <body class="min-h-screen dark:text-white flex flex-col body-main">
         <!-- header -->
         <header class="text-white sticky top-0 z-10" id="header">
-            <section class="max-w-6xl mx-auto p-4 flex justify-between items-center">
-                <h1 class="text-3xl font-medium">
-                    <a href="/" class="">Mystery Games</a>
-                </h1>          
+            <section class="max-w-6xl mx-auto p-4 flex flex-row flex-wrap justify-between items-center">                
+                <div class="flex-none">
+                    <h1 class="text-3xl font-medium">
+                        <a href="/" class="">Mystery Games</a>
+                    </h1>          
+                </div>
+                <div class="flex">
+                    {% if login_status == True %}
+                     <a href="/logout">Logout</a>
+                    {% endif %}
+                </div>                
             </section>
         </header>
         <main class="max-w-7xl mx-auto">
-            <section id="hero" class="flex flex-col justify-center sm:flex-col p-4 items-center gap-8 mb-12">
+            <section id="hero" class="flex flex-col justify-center sm:flex-col p-4 items-center gap-8 mb-12 max-h-screen">
                 <!-- main content -->
                 {% block content %}
                 {% endblock %}

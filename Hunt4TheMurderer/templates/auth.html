@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title%} {{ title }} {% endblock %}
+{% block title%} - {{ title }} {% endblock %}
 {% block content%}
 <div class="w-full max-w-xs">
     <form action="{{ request.path }}" method="POST" class="bg-transparent bg-stone-500 shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -15,14 +15,12 @@
         </div>
         {% endfor %}
         {% endif %}
-        {% endwith %}
-        
-                  
-        <div class="mb-4">
+        {% endwith %}          
+        <div class="mb-6">
             <label class="block text-sm font-bold mb-2" for="username">
                 Username
             </label>
-            {{ form.username(class_="form-control text-black",placeholder="Username")}}
+            {{ form.username(class_="form-control text-black w-full ",placeholder="Username")}}
         </div>
         {% for error in form.username.errors %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -74,13 +72,17 @@
         <div class="text-center">
 
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-block btn-primary mb-3"> {{ btn_action }} </button>
+                <button type="submit" 
+                class="text-white bg-orange-950 hover:bg-orange-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 text-center uppercase mr-2 mb-2"
+                > 
+                    {{ btn_action }} 
+                </button>
             </div>
 
             <p>
                 {% if request.path != '/register' %}
-                New here?
-                <a href="{{url_for('auth.register')}}">Create account</a>
+                Don't have login information?<br>
+                <a href="{{url_for('auth.register')}}">Contact Us</a>
                 {% else %}
                 Already have an account?
                 <a href="{{url_for('auth.login')}}">Login</a>
