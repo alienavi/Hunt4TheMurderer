@@ -4,7 +4,9 @@ from wtforms import (
     BooleanField,
     IntegerField,
     DateField,
-    TextAreaField
+    TextAreaField,
+    HiddenField,
+    SubmitField
 )
 
 from flask_wtf import FlaskForm
@@ -42,7 +44,10 @@ class register_form(FlaskForm) :
             Optional(),
         ]
     )
-
     def validate_uname(self, username):
         if User.query.filter_by(username=username.data).first():
             raise ValidationError('Username Already Exists!')
+
+class delete_form(FlaskForm):
+    user_id = HiddenField()
+    delete_btn = SubmitField('Delete')

@@ -6,23 +6,55 @@
     <div class="flex-1">
         <h2 class="text-lg">Howdy, Admin!</h2>
     </div>
-    <div class="flex-1  bg-orange-950 bg-opacity-25 px-10 py-2">
+    <div class="flex-1 bg-orange-950 bg-opacity-25 px-10 py-2 rounded-xl">
+        <table class="w-full">
         <p class="-ml-5">List of active/created players - </p>
-        <ul>
-            {% for user in userlist  %}
-                <li>{{ user.username }} - {{ user.is_active }}</li>
-            {% endfor %}
-        </ul>
+        <thead class="uppercase text-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Username
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Active?
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Type
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+        {% for user in userlist  %}            
+            <tr class="border-b border-gray-200">
+                <th scope="row">{{ user.username }}</th>
+                <td>{{ user.is_active }}</td>
+                {% if user.admin != True %}
+                <td>
+                    Player
+                </td>
+                <td>
+                    <form method="post">
+                        {{ delete_form.csrf_token }}
+                        {{ delete_form.user_id(value=user.id) }}
+                        {{ delete_form.delete_btn(class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 mr-2 my-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900")}}                       
+                    </form>
+                </td>
+                {% else %}
+                <td>
+                    Admin
+                </td>                
+                {% endif %}
+            </tr>            
+        {% endfor %}
+        </tbody>
+        </table>
     </div>
-    <div class="flex flex-row pt-2 items-center align-middle">
+    <div class="flex flex-col pt-2 items-center align-middle">
         <div class="flex">
-            <a type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+            <a type="button" href="{{ url_for('auth.register')}}" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                 Add User
-            </a>
-        </div>
-        <div class="flex">
-            <a type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                Delete User
             </a>
         </div>
     </div>

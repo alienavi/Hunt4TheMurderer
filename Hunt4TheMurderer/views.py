@@ -19,13 +19,15 @@ imgList = [
 main = Blueprint('main',__name__)
 
 @main.route('/', methods=['GET', 'POST'])
+@main.route('/home', methods=['GET', 'POST'])
 def home():
     shuffle(imgList)
     return render_template('index.html', login_status=current_user.is_authenticated)
 
-@main.route('/start_game', methods=['GET', 'POST'])
+@main.route('/start_game')
 @login_required
 def start_game():
+    print('Main - Start Game')
     return render_template('intro.html', username=current_user.username, login_status=current_user.is_authenticated)
 
 @main.route('/game', methods=['GET', 'POST'])
