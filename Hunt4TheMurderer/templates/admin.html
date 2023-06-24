@@ -7,10 +7,10 @@
         <h2 class="text-lg">Howdy, Admin!</h2>
     </div>
     <div class="flex-1  bg-orange-950 bg-opacity-25 px-10 py-2">
-        <p>List of active/created players - </p>
+        <p class="-ml-5">List of active/created players - </p>
         <ul>
             {% for user in userlist  %}
-                <li>{{ user.username }}</li>
+                <li>{{ user.username }} - {{ user.is_active }}</li>
             {% endfor %}
         </ul>
     </div>

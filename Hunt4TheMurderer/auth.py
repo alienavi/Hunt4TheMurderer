@@ -17,10 +17,10 @@ def load_all_users():
     return User.query.all()
 
 @auth.route('/login', methods=['GET','POST'])
-def login():
-    if current_user.is_authenticated:
-        if current_user.admin == True :
-            redirect(url_for('auth.admin'))
+def login():    
+    if current_user.is_authenticated:        
+        if current_user.admin == True :            
+            return redirect(url_for('auth.admin'))
         else :
             return redirect(url_for('auth.player'))
     form = login_form()
@@ -29,6 +29,11 @@ def login():
             user = User.query.filter_by(username=form.username.data).first()
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
+                try :
+                    user.is_active = True
+                    db.session.commit()
+                except e as error:
+                    db.session.rollback()
                 if user.admin == True :                    
                     return redirect(url_for('auth.admin'))
                 else :
@@ -92,26 +97,28 @@ def register():
 
 @auth.route('/logout')
 def logout():
+    current_user.is_active = False
+    db.session.commit()
     logout_user()
     return redirect(url_for('auth.login'))
 
 @auth.route('/admin', methods=['GET', 'POST'])
-@login_required
 def admin():    
     if current_user.is_authenticated:
         if current_user.admin == True :
             users = load_all_users()            
-            return render_template('admin.html', userlist=users)
+            return render_template('admin.html', userlist=users, login_status=current_user.is_authenticated)
         else :
             return 'Forbidden'
+    else :
+        return redirect(url_for('auth.login'))
     
 @auth.route('/player')
-@login_required
 def player():
     if current_user.is_authenticated:
         return redirect(url_for('main.start_game'))
     else:
-        return 'Login Required'
+        return redirect(url_for('auth.login'))
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
