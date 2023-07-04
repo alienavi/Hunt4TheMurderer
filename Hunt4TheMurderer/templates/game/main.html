@@ -29,53 +29,9 @@
                         </div>
                         <!-- Modal body -->
                         <div class="p-6 space-y-6">
-                                {% if 'Kitchen' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    As you step into the kitchen, a chilling breeze whispers through the empty chairs, causing the flickering candlelight to cast eerie shadows on the stained countertops. The faint sound of dripping water echoes, accompanied by an unshakable feeling of unseen eyes observing your every move.
-                                </p>
-                                {% include "game/kitchen.html" %}                               
-                                {% endif %}
-                                {% if 'LivingRoom' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    A cold silence fills the air as you enter the living room, the flickering fireplace providing meager warmth against the oppressive chill. The faded portraits on the walls seem to gaze at you with hollow eyes, while the creaking floorboards beneath your feet hint at a hidden presence lurking in the shadows.
-                                </p>
-                                {% include "game/LivingRoom.html" %}
-                                {% endif %}
-                                {% if 'DiningRoom' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    The dining room emanates an eerie stillness, as if frozen in time. The grand table is set for a long-forgotten feast, covered in a thin layer of dust and surrounded by cobweb-laden chairs. The soft whispers of forgotten conversations linger, and a solitary, flickering candle seems to flicker with spectral anticipation.
-                                </p>
-                                {% endif %}
-                                {% if 'Courtyard' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    The courtyard exudes a haunting tranquility, with overgrown ivy creeping up the cracked stone walls and gnarled trees casting elongated shadows. The wind carries a mournful melody, and the dilapidated fountain drips with an otherworldly, greenish hue, as if harboring secrets of its own.
-                                </p>
-                                {% endif %}
-                                {% if 'GamesRoom' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    As you enter the games room, a chilling sense of playful malevolence hangs in the air. The shelves of forgotten board games and broken toys create a macabre atmosphere, while a flickering antique pinball machine seems to come to life, its clinking sounds taking on an unnerving rhythm.
-                                </p>
-                                {% endif %}
-                                {% if 'Garage' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    The dimly lit garage feels suffocating, filled with the musty scent of motor oil and decaying memories. Shadows dance on the worn concrete floor, revealing glimpses of forgotten tools and broken machinery. The echo of a distant engine rumbles through the stagnant air, evoking a sense of foreboding.
-                                </p>
-                                {% endif %}
-                                {% if 'Study' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    The study exudes an air of intellectual decay, with shelves of weathered books and disheveled manuscripts, their pages yellowed and brittle. The flickering candle on the desk casts long, distorted shadows, while the sound of a phantom pen scratching against parchment fills your ears.
-                                </p>
-                                {% endif %}
-                                {% if 'Bathroom' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    The bathroom feels like a distorted reflection, with cracked mirrors reflecting fractured images of the past. A chill runs down your spine as the dripping faucet echoes through the desolate space, while the half-opened medicine cabinet reveals its unsettling contents, hinting at a haunting history.
-                                </p>
-                                {% endif %}
-                                {% if 'Bedroom' == item_name %}
-                                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                                    Stepping into the bedroom, a heavy sense of unease settles upon you. The tattered curtains sway in an unseen breeze, and the oppressive darkness seems to seep into every corner. The old, creaking bed beckons with a spectral invitation, and the faint whispers of forgotten dreams echo through the unsettling silence.
-                                </p>
-                                {% endif %}
+                            {% with room_name=item_name %}
+                                {% include 'game/room.html' %}
+                            {% endwith %}
                         </div>
                         <!-- Modal footer -->
                         <div class="block text-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">                            
