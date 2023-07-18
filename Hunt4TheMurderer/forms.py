@@ -35,7 +35,7 @@ class register_form(FlaskForm) :
     confirm_pwd = PasswordField(
         validators=[
             InputRequired(),
-            Length(8,16),
+            Length(6,16),
             EqualTo('password', message='Passwords must match!')
         ]
     )

@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-import logging
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -17,8 +16,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 bcrypt = Bcrypt()
 
-logging.basicConfig(level=logging.DEBUG)
-logging.debug('Log Started')
 
 def page_not_found(e):
     return render_template('404.html'), 404
