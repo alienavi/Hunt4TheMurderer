@@ -5,12 +5,17 @@
 <div class="container">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 m-2 p-4">
         {% for item in imgList %}
-            {% set item_name = item|replace('"',"")|safe %}
-            {% set imgUrl = 'images/' + item_name + '.png' %}                    
-            {% set imgUrl = imgUrl|replace(' ',"")|safe %}
-            <div>
+            <div class="relative">
                 <a data-modal-target="{{item}}" data-modal-toggle="{{item}}" style="cursor: pointer;">
-                    <img src="{{ url_for('static', filename=imgUrl) | safe }}" alt="{{item}}">
+                    <img src="{{ url_for('static', filename='images/' + item + '.png') }}" alt="{{item}}" 
+                         class="{% if item not in available_rooms %}opacity-50{% endif %}">
+                    {% if item in completed_rooms %}
+                        <div class="absolute top-2 right-2 bg-green-500 text-white rounded-full p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    {% endif %}
                 </a>
             </div>
             <div id="{{item}}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -20,7 +25,10 @@
                         <!-- Modal header -->
                         <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
                             <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                                The {{item_name}}
+                                The {{item}}
+                                {% if item in completed_rooms %}
+                                    <span class="ml-2 text-green-500">✓</span>
+                                {% endif %}
                             </h3>
                             <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="{{item}}">
                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -29,13 +37,35 @@
                         </div>
                         <!-- Modal body -->
                         <div class="p-6 space-y-6">
-                            {% with room_name=item_name %}
+                            {% with room_name=item %}
                                 {% include 'game/room.html' %}
                             {% endwith %}
                         </div>
                         <!-- Modal footer -->
                         <div class="block text-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">                            
                             <button data-modal-hide="{{item}}" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Go Back</button>
+                            {% if item in available_rooms %}
+                                <a href="{{ url_for('main.room', room_name=item) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Enter</a>
+                            {% else %}
+                                <button disabled class="text-white bg-gray-400 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center" 
+                                        data-tooltip-target="tooltip-{{item}}">
+                                    Enter
+                                </button>
+                                <div id="tooltip-{{item}}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    {% if item == 'Garage' %}
+                                        Complete the Courtyard first
+                                    {% elif item == 'Bedroom' %}
+                                        Complete the Living Room first
+                                    {% elif item == 'DiningRoom' %}
+                                        Complete the Kitchen first
+                                    {% elif item == 'Bathroom' %}
+                                        Complete the Bedroom first
+                                    {% elif item in ['Study', 'GamesRoom'] %}
+                                        Complete the Bathroom first
+                                    {% endif %}
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -43,6 +73,165 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Floating Diary Button -->
+<div class="fixed bottom-8 right-8 z-50 flex space-x-4">
+    <button onclick="openDiary()" class="bg-red-600 hover:bg-red-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+    </button>
+    {% if completed_rooms|length == imgList|length %}
+    <button onclick="openFinalAnswer()" class="bg-green-600 hover:bg-green-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transform transition-transform hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+    </button>
+    {% endif %}
+</div>
+
+<!-- Diary Modal -->
+<div id="diaryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="min-h-screen px-4 text-center">
+        <div class="fixed inset-0" onclick="closeDiary()"></div>
+        <div class="inline-block align-middle my-8 p-6 w-full max-w-4xl text-left bg-gray-800 rounded-lg shadow-xl transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-red-400">Investigation Diary</h2>
+                <button onclick="closeDiary()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="max-h-[70vh] overflow-y-auto pr-2 space-y-4">
+                {% for clue in clues %}
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-red-300 mb-2">{{ clue.room_name }}</h3>
+                    <p class="text-gray-300">{{ clue.clue_text }}</p>
+                    <p class="text-sm text-gray-400 mt-2">Discovered: {{ clue.discovered_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+                {% else %}
+                <p class="text-gray-400 text-center py-4">No clues discovered yet. Solve room puzzles to gather evidence!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Final Answer Modal -->
+<div id="finalAnswerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="min-h-screen px-4 text-center">
+        <div class="fixed inset-0" onclick="closeFinalAnswer()"></div>
+        <div class="inline-block align-middle my-8 p-6 w-full max-w-2xl text-left bg-gray-800 rounded-lg shadow-xl transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-green-400">Submit Final Answer</h2>
+                <button onclick="closeFinalAnswer()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="final-answer-feedback" class="hidden mb-4 p-4 rounded-lg"></div>
+            <form id="final-answer-form" class="space-y-6">
+                <div>
+                    <label for="suspect" class="block text-sm font-medium text-gray-300 mb-2">Who committed the murder?</label>
+                    <select id="suspect" name="suspect" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                        <option value="">Select a suspect</option>
+                        <option value="Jacob Green">Jacob Green</option>
+                        <option value="Dr. White">Dr. White</option>
+                        <option value="Jack Mustard">Jack Mustard</option>
+                        <option value="Eleanor Peacock">Eleanor Peacock</option>
+                        <option value="Kassandra Scarlet">Kassandra Scarlet</option>
+                        <option value="Victor Plum">Victor Plum</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="room" class="block text-sm font-medium text-gray-300 mb-2">Where did it happen?</label>
+                    <select id="room" name="room" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                        <option value="">Select a room</option>
+                        <option value="Bedroom">Bedroom</option>
+                        <option value="Kitchen">Kitchen</option>
+                        <option value="LivingRoom">Living Room</option>
+                        <option value="DiningRoom">Dining Room</option>
+                        <option value="Courtyard">Courtyard</option>
+                        <option value="GamesRoom">Games Room</option>
+                        <option value="Garage">Garage</option>
+                        <option value="Study">Study</option>
+                        <option value="Bathroom">Bathroom</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="weapon" class="block text-sm font-medium text-gray-300 mb-2">What was the weapon?</label>
+                    <select id="weapon" name="weapon" class="w-full bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                        <option value="">Select a weapon</option>
+                        <option value="Revolver">Revolver</option>
+                        <option value="Dagger">Dagger</option>
+                        <option value="Lead Pipe">Lead Pipe</option>
+                        <option value="Rope">Rope</option>
+                        <option value="Candlestick">Candlestick</option>
+                        <option value="Wrench">Wrench</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">
+                        Submit Solution
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDiary() {
+    document.getElementById('diaryModal').classList.remove('hidden');
+}
+
+function closeDiary() {
+    document.getElementById('diaryModal').classList.add('hidden');
+}
+
+function openFinalAnswer() {
+    document.getElementById('finalAnswerModal').classList.remove('hidden');
+}
+
+function closeFinalAnswer() {
+    document.getElementById('finalAnswerModal').classList.add('hidden');
+}
+
+document.getElementById('final-answer-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const feedback = document.getElementById('final-answer-feedback');
+    
+    fetch('{{ url_for("main.submit_final_answer") }}', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(new FormData(form))
+    })
+    .then(response => response.json())
+    .then(data => {
+        feedback.classList.remove('hidden');
+        if (data.success) {
+            feedback.className = 'mb-4 p-4 rounded-lg bg-green-100 text-green-800';
+            setTimeout(() => {
+                window.location.href = '{{ url_for("main.congratulations") }}';
+            }, 2000);
+        } else {
+            feedback.className = 'mb-4 p-4 rounded-lg bg-red-100 text-red-800';
+        }
+        feedback.textContent = data.message;
+    })
+    .catch(error => {
+        feedback.classList.remove('hidden');
+        feedback.className = 'mb-4 p-4 rounded-lg bg-red-100 text-red-800';
+        feedback.textContent = 'An error occurred. Please try again.';
+    });
+});
+</script>
 
 {% endblock %}
 {%- block javascript -%}

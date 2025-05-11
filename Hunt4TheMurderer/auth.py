@@ -5,8 +5,9 @@ from werkzeug.routing import BuildError
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from .models import User
-from . import db,login_manager, logging
+from . import db,login_manager
 from .forms import login_form, register_form, delete_form
+import logging
 
 auth = Blueprint('auth',__name__)
 

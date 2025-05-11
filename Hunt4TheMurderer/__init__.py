@@ -26,7 +26,7 @@ def create_app():
 
     login_manager.init_app(app)
     db.init_app(app)
-    migrate.init_app(app)
+    migrate.init_app(app, db)
     bcrypt.init_app(app)
 
     from .auth import auth as auth_blueprint

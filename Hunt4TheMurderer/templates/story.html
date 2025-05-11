@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Title -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-red-600 animate-pulse">Bloody Castle</h1>
+            <p class="text-xl text-gray-400">A Murder Mystery Adventure</p>
+        </div>
+
+        <!-- Story Container -->
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 mb-12 relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-600 via-red-800 to-red-600"></div>
+            <div class="absolute bottom-0 right-0 w-32 h-32 bg-red-900 opacity-10 rounded-full transform translate-x-16 translate-y-16"></div>
+            
+            <!-- Story text with fade-in animation -->
+            <div class="space-y-6 text-lg leading-relaxed">
+                <p class="animate-fade-in" style="animation-delay: 0.5s">
+                    Welcome to the grand and mysterious Bloody Castle, perched high on a desolate cliffside, its darkened silhouette casting an ominous shadow over the surrounding landscape. For years, the mansion stood as a symbol of wealth, power, and secrecy, hosting the most intriguing of guests and the most glamorous of parties. Yet, within its grand stone walls, beneath its elegant chandeliers and lavish furnishings, lies a chilling secret that no one could have anticipated.
+                </p>
+                
+                <p class="animate-fade-in" style="animation-delay: 1.5s">
+                    Mr. Bloody, the enigmatic and wealthy heir to the Bloody family fortune, was found brutally murdered in his own castle. The discovery sent shockwaves through the local community, but no one could have foreseen the horror that would unfold.
+                </p>
+                
+                <p class="animate-fade-in" style="animation-delay: 2.5s">
+                    The crime scene is a mess of bloodstains, shattered glass, and broken furniture, and the castle has become a dark maze of rooms, corridors, and hidden passageways. Despite the police efforts, the identity of the killer remains a mystery—everyone had a motive, but no one can be fully trusted.
+                </p>
+                
+                <p class="animate-fade-in" style="animation-delay: 3.5s">
+                    Now, you—an astute investigator—have been called to uncover the truth. The suspects are all within the castle's walls, and the clues are scattered throughout the many rooms of this eerie mansion. But be warned: The castle is filled with traps, riddles, and deceptions. Every room hides secrets, and each person has something to hide.
+                </p>
+                
+                <p class="animate-fade-in" style="animation-delay: 4.5s">
+                    The time has come to put your skills to the test. Can you solve the murder before it's too late? The clock is ticking, and the mystery of Mr. Bloody's brutal death awaits your keen eyes and sharp mind.
+                </p>
+                
+                <p class="animate-fade-in font-bold text-red-400" style="animation-delay: 5.5s">
+                    Are you ready to embark on the investigation of a lifetime? Step into Bloody Castle, where only the most cunning will survive... and the truth may be more terrifying than you ever imagined.
+                </p>
+            </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="text-center">
+            <a href="{{ url_for('main.intro') }}" 
+               class="inline-block px-8 py-4 text-xl font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-lg animate-bounce">
+                Continue to Investigation
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    /* Add spooky cursor effect */
+    body {
+        cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='red' stroke-width='2'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>") 12 12, auto;
+    }
+</style>
+{% endblock %} 

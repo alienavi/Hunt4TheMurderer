@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">The {{ room_name }}</h1>
+            <a href="{{ url_for('main.mansion') }}" onclick="clearMessages()" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                Go Back
+            </a>
+        </div>
+        
+        <div class="space-y-6">
+            <!-- Room Image -->
+            <div class="w-full">
+                <img src="{{ url_for('static', filename='images/' + room_name + '.png') }}" alt="{{ room_name }}" class="w-full h-auto rounded-lg">
+            </div>
+            
+            <!-- Room Description -->
+            <div class="prose dark:prose-invert max-w-none">
+                {% with room_name=room_name %}
+                    {% include 'game/room.html' %}
+                {% endwith %}
+            </div>
+            
+            <!-- Puzzle Section -->
+            <div class="mt-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                {% if not completed %}
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Room Puzzle</h2>
+                    <p class="mb-4 text-gray-700 dark:text-gray-300">{{ puzzle.question }}</p>
+                    
+                    <!-- Flashed messages -->
+                    <div id="puzzle-feedback" class="hidden mb-4">
+                        <div class="p-4 rounded-lg"></div>
+                    </div>
+                    
+                    <form id="puzzle-form" method="POST" class="space-y-4">
+                        <div>
+                            <label for="answer" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Your Answer:</label>
+                            <input type="text" name="answer" id="answer" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                Submit Answer
+                            </button>
+                            <button type="button" onclick="showHint()" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                                Show Hint
+                            </button>
+                        </div>
+                    </form>
+                    <div id="hint" class="hidden mt-4 p-4 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
+                        <p class="text-yellow-800 dark:text-yellow-200">{{ puzzle.hint }}</p>
+                    </div>
+                {% else %}
+                    <div class="text-center">
+                        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <h2 class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Puzzle Completed!</h2>
+                        <p class="mt-1 text-gray-600 dark:text-gray-400">You've solved this room's puzzle.</p>
+                    </div>
+                    
+                    <!-- Clue Section -->
+                    <div class="bg-gray-800 rounded-lg shadow-xl p-6 mb-6">
+                        <h2 class="text-xl font-bold mb-4 text-red-400">Clue Discovered</h2>
+                        <p class="text-gray-300 mb-4">{{ clue }}</p>
+                        <div id="clue-feedback" class="hidden mb-4 p-4 rounded-lg"></div>
+                        <form id="add-clue-form" action="{{ url_for('main.add_clue', room_name=room_name) }}" method="post" class="text-center">
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Add to Diary
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+function showHint() {
+    document.getElementById('hint').classList.remove('hidden');
+}
+
+function clearMessages() {
+    // Clear any flashed messages from the session
+    fetch('{{ url_for("main.clear_messages") }}', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    });
+}
+
+document.getElementById('puzzle-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const feedback = document.getElementById('puzzle-feedback');
+    const feedbackContent = feedback.querySelector('div');
+    
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(new FormData(form))
+    })
+    .then(response => response.json())
+    .then(data => {
+        feedback.classList.remove('hidden');
+        if (data.success) {
+            feedbackContent.className = 'p-4 rounded-lg bg-green-100 text-green-800';
+            // Reload the page to show the completed state
+            window.location.reload();
+        } else {
+            feedbackContent.className = 'p-4 rounded-lg bg-red-100 text-red-800';
+        }
+        feedbackContent.textContent = data.message;
+    })
+    .catch(error => {
+        feedback.classList.remove('hidden');
+        feedbackContent.className = 'p-4 rounded-lg bg-red-100 text-red-800';
+        feedbackContent.textContent = 'An error occurred. Please try again.';
+    });
+});
+
+document.getElementById('add-clue-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const feedback = document.getElementById('clue-feedback');
+    
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        feedback.classList.remove('hidden');
+        if (data.success) {
+            feedback.className = 'mb-4 p-4 rounded-lg bg-green-100 text-green-800';
+            form.style.display = 'none';
+        } else {
+            feedback.className = 'mb-4 p-4 rounded-lg bg-yellow-100 text-yellow-800';
+        }
+        feedback.textContent = data.message;
+    })
+    .catch(error => {
+        feedback.classList.remove('hidden');
+        feedback.className = 'mb-4 p-4 rounded-lg bg-red-100 text-red-800';
+        feedback.textContent = 'An error occurred. Please try again.';
+    });
+});
+</script>
+{% endblock %} 
