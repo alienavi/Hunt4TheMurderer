@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError, DataError, DatabaseError, InterfaceEr
 from werkzeug.routing import BuildError
 from flask_bcrypt import Bcrypt, generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
-from .models import User
+from .models import User, Clue, RoomCompletion
 from . import db,login_manager
 from .forms import login_form, register_form, delete_form
 import logging
@@ -19,44 +19,43 @@ def load_all_users():
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
-    logging.debug('1. Here')
     if current_user.is_authenticated:
-        logging.debug('2. Here')
-        if current_user.admin == True :
+        if current_user.admin:
             return redirect(url_for('auth.admin'))
-        else :
-            return redirect(url_for('main.start_game'))
+        return redirect(url_for('main.start_game'))
+    
     form = login_form()
     if form.validate_on_submit():
-        logging.debug('3. Here')
         try:
-            logging.debug('4. Here')
             user = User.query.filter_by(username=form.username.data).first()
-            if check_password_hash(user.password, form.password.data):
-                logging.debug('5. Here')
-                logging.debug('User - ' + str(user.username))
-                login_user(user)
-                try :
-                    user.is_active = True
-                    db.session.commit()
-                except e as error:
-                    db.session.rollback()
-                logging.debug('6. ' + str(user.admin))
-                if user.admin == True :                    
+            if user and check_password_hash(user.password, form.password.data):
+                # Set session as permanent if remember is checked
+                if form.remember.data:
+                    session.permanent = True
+                
+                # Login user and update active status
+                login_user(user, remember=form.remember.data)
+                user.is_active = True
+                db.session.commit()
+                
+                # Clear any existing flash messages
+                session.pop('_flashes', None)
+                
+                # Redirect based on user type
+                if user.admin:
                     return redirect(url_for('auth.admin'))
-                else :
-                    logging.debug('Login -> Start game')
-                    return redirect(url_for('main.start_game'))
-            else :
-                flash('Incorrect Password', 'Danger')
+                return redirect(url_for('main.start_game'))
+            else:
+                flash('Invalid username or password', 'danger')
         except Exception as e:
-            flash('Please check username or password', 'Danger')
+            logging.error(f"Login error: {str(e)}")
+            flash('An error occurred during login. Please try again.', 'danger')
+            db.session.rollback()
+    
     return render_template(
-        'auth.html',
+        'login.html',
         form=form,
-        text='Login',
-        title='Login',
-        btn_action='Login'
+        login_status=current_user.is_authenticated
     )
 
 @auth.route('/register', methods=['POST','GET'])
@@ -110,16 +109,30 @@ def logout():
 @login_required
 def admin():    
     if current_user.is_authenticated:
-        if current_user.admin == True :
+        if current_user.admin == True:
             form = delete_form()
             if form.validate_on_submit():
-                try :
+                logging.debug(f"Delete form submitted. User ID: {form.user_id.data}")
+                try:
                     user = User.query.get(form.user_id.data)
-                    db.session.delete(user)
-                    db.session.commit()
-                except Exception as e :
+                    logging.debug(f"Found user: {user.username if user else 'None'}")
+                    if user and not user.admin:  # Prevent deleting admin users
+                        logging.debug(f"Deleting user: {user.username}")
+                        # Delete associated clues first
+                        Clue.query.filter_by(user_id=user.id).delete()
+                        # Delete room completions
+                        RoomCompletion.query.filter_by(user_id=user.id).delete()
+                        # Now delete the user
+                        db.session.delete(user)
+                        db.session.commit()
+                        flash('User successfully deleted!', 'success')
+                    else:
+                        logging.debug("Cannot delete - user is admin or not found")
+                        flash('Cannot delete admin users!', 'warning')
+                except Exception as e:
+                    logging.error(f"Error deleting user: {str(e)}")
                     db.session.rollback()
-                    pass
+                    flash('Error deleting user!', 'danger')
             users = load_all_users()            
             return render_template('admin.html', userlist=users, login_status=current_user.is_authenticated, delete_form=form)
 

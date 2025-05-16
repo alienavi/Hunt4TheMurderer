@@ -4,10 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>
-            Hunt for The Murderer!
-            {% block title %}{% endblock %}
-        </title>
+        <title>{% block title %}Hunt for the Murderer{% endblock %}</title>
         <meta name="description" content="Tokyo has been killed on her estate. With her misdeeds she has no small list of enemies. 
         The traces are all around the web. The detective is looking for a partner to solve the case, can you take us this daunting task?">
         
@@ -25,19 +22,43 @@
         <script type=text/javascript>
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
+        <style>
+            body {
+                background-color: #0f172a;
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+            .spooky-text {
+                text-shadow: 2px 2px 4px rgba(220, 38, 38, 0.5);
+            }
+            .spooky-border {
+                border: 1px solid rgba(220, 38, 38, 0.3);
+                box-shadow: 0 0 15px rgba(220, 38, 38, 0.2);
+            }
+            .spooky-hover:hover {
+                box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+            }
+            .spooky-input {
+                background-color: rgba(17, 24, 39, 0.7);
+                border: 1px solid rgba(220, 38, 38, 0.3);
+            }
+            .spooky-input:focus {
+                border-color: rgb(220, 38, 38);
+                box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+            }
+        </style>
     </head>
-    <body class="min-h-screen dark:text-white flex flex-col body-main">
+    <body class="min-h-screen text-gray-200 flex flex-col">
         <!-- header -->
-        <header class="bg-gray-800 text-white shadow-md" id="header">
+        <header class="bg-gray-900 border-b border-red-900 shadow-lg">
             <section class="max-w-6xl mx-auto p-4 flex flex-row flex-wrap justify-between items-center">                
                 <div class="flex-none">
-                    <h1 class="text-3xl font-medium">
-                        <a href="/" class="">Mystery Games</a>
+                    <h1 class="text-3xl font-medium spooky-text">
+                        <a href="/" class="text-red-500 hover:text-red-400 transition-colors">Mystery Games</a>
                     </h1>          
                 </div>
                 <div class="flex">
                     {% if login_status == True %}
-                     <a href="/logout">Logout</a>
+                    <a href="/logout" class="text-red-400 hover:text-red-300 transition-colors">Logout</a>
                     {% endif %}
                 </div>                
             </section>
@@ -50,10 +71,11 @@
             </section>
         </main>
         <!-- footer -->
-        <footer id="footer" class="bg-gray-800 text-white text-md w-full">
-            <section class="max-w-6xl mx-auto flex flex-col p-4 sm:flex-row sm:justify-between">
-                <div class="w-full sm:gap-1">
-                    <p class="text-center">Copyright &copy; <span id="year">2023</span>. All Rights Reserved.</p>
+        <footer id="footer" class="bg-gray-900 border-t border-red-900 text-gray-400 text-md w-full shadow-2xl relative z-10">
+            <section class="max-w-6xl mx-auto flex flex-col p-4 sm:flex-row sm:justify-between items-center">
+                <div class="flex items-center gap-2 w-full justify-center sm:justify-start">
+                    <span class="text-2xl animate-pulse">&#128123;</span>
+                    <p class="text-center spooky-text">&copy; <span id="year">2023</span> Bloody Castle. All Rights Reserved. <span class="text-red-500">|</span> Beware what lurks in the shadows...</p>
                 </div>
             </section>
         </footer>
@@ -62,6 +84,8 @@
             if ( window.history.replaceState ) {
                 window.history.replaceState( null, null, window.location.href );
             }
+            // Set footer year dynamically
+            document.getElementById('year').textContent = new Date().getFullYear();
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
         {%- block javascript -%}{%- endblock -%}

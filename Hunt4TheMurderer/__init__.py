@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from datetime import timedelta
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -23,7 +24,14 @@ def page_not_found(e):
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-
+    
+    # Session configuration
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+    
+    # Initialize extensions
     login_manager.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)

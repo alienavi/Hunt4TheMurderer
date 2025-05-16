@@ -17,8 +17,16 @@ from wtforms import ValidationError, validators
 from .models import User
 
 class login_form(FlaskForm) :
-    username = StringField(validators=[InputRequired(), Length(3,8)])
-    password = PasswordField(validators=[InputRequired(), Length(8, 16)])
+    username = StringField(validators=[
+        InputRequired(message='Username is required'),
+        Length(min=3, max=32, message='Username must be between 3 and 32 characters')
+    ])
+    password = PasswordField(validators=[
+        InputRequired(message='Password is required'),
+        Length(min=6, max=32, message='Password must be between 6 and 32 characters')
+    ])
+    remember = BooleanField('Remember me')
+
 class register_form(FlaskForm) :
     username = StringField(
         validators=[
@@ -49,5 +57,5 @@ class register_form(FlaskForm) :
             raise ValidationError('Username Already Exists!')
 
 class delete_form(FlaskForm):
-    user_id = HiddenField()
+    user_id = HiddenField('User ID')
     delete_btn = SubmitField('Delete')

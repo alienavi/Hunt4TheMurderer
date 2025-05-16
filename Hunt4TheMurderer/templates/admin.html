@@ -4,56 +4,62 @@
 
 <div class="w-max flex flex-col mt-10 px-10 pt-2 pb-5">
     <div class="flex-1">
-        <h2 class="text-lg">Howdy, Admin!</h2>
+        <h2 class="text-2xl font-bold text-red-500 spooky-text mb-6">Howdy, Admin!</h2>
     </div>
-    <div class="flex-1 bg-orange-950 bg-opacity-25 px-10 py-2 rounded-xl">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if category == 'success' %}bg-green-900/50 text-green-300 border border-green-700{% elif category == 'warning' %}bg-yellow-900/50 text-yellow-300 border border-yellow-700{% elif category == 'danger' %}bg-red-900/50 text-red-300 border border-red-700{% else %}bg-blue-900/50 text-blue-300 border border-blue-700{% endif %} spooky-border">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="flex-1 bg-gray-900/80 px-10 py-6 rounded-xl spooky-border">
         <table class="w-full">
-        <p class="-ml-5">List of active/created players - </p>
-        <thead class="uppercase text-sm">
-            <tr>
-                <th scope="col" class="px-6 py-3">
-                    Username
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Active?
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Type
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        <tbody class="text-center">
-        {% for user in userlist  %}            
-            <tr class="border-b border-gray-200">
-                <th scope="row">{{ user.username }}</th>
-                <td>{{ user.is_active }}</td>
-                {% if user.admin != True %}
-                <td>
-                    Player
-                </td>
-                <td>
-                    <form method="post">
-                        {{ delete_form.csrf_token }}
-                        {{ delete_form.user_id(value=user.id) }}
-                        {{ delete_form.delete_btn(class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2 mr-2 my-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900")}}                       
-                    </form>
-                </td>
-                {% else %}
-                <td>
-                    Admin
-                </td>                
-                {% endif %}
-            </tr>            
-        {% endfor %}
-        </tbody>
+            <p class="text-xl text-red-400 mb-4 spooky-text">List of active/created players</p>
+            <thead class="uppercase text-sm text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left">Username</th>
+                    <th scope="col" class="px-6 py-3 text-center">Active?</th>
+                    <th scope="col" class="px-6 py-3 text-center">Type</th>
+                    <th scope="col" class="px-6 py-3 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-300">
+            {% for user in userlist %}            
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50 transition-colors">
+                    <th scope="row" class="px-6 py-4 text-left">{{ user.username }}</th>
+                    <td class="px-6 py-4 text-center">{{ user.is_active }}</td>
+                    {% if user.admin != True %}
+                    <td class="px-6 py-4 text-center">
+                        Player
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <form method="post" action="{{ url_for('auth.admin') }}" class="inline">
+                            {{ delete_form.csrf_token }}
+                            {{ delete_form.user_id(value=user.id) }}
+                            <button type="submit" name="delete_btn" value="Delete" class="focus:outline-none text-white bg-red-900 hover:bg-red-800 focus:ring-4 focus:ring-red-700 font-medium rounded-lg text-sm px-5 py-2 mr-2 my-2 transition-colors spooky-hover">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td class="px-6 py-4 text-center">
+                        Admin
+                    </td>                
+                    {% endif %}
+                </tr>            
+            {% endfor %}
+            </tbody>
         </table>
     </div>
-    <div class="flex flex-col pt-2 items-center align-middle">
+    <div class="flex flex-col pt-6 items-center align-middle">
         <div class="flex">
-            <a type="button" href="{{ url_for('auth.register')}}" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+            <a type="button" href="{{ url_for('auth.register')}}" class="focus:outline-none text-white bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-green-700 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 transition-colors spooky-hover">
                 Add User
             </a>
         </div>
